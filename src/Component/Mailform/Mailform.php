@@ -1,6 +1,5 @@
 <?php
 	/**
-	 * Documents the class following
 	 * @package Nomadcode\Component\Mailform\Mailform
  	 */
 
