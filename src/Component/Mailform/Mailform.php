@@ -170,18 +170,19 @@ EndOfHTML;
 			// Validate email
 			
 			if (filter_var($mail_email, FILTER_VALIDATE_EMAIL) === FALSE) {
-				return $this->render_failure_message(MailformStrings::MESSAGE_INVALID_EMAIL);
+				return $this->render_notification('failure',MailformStrings::MESSAGE_INVALID_EMAIL);
 			}
 			
 			// Message must be non-empty
 			
 			if ($mail_message == "") {
-				return $this->render_failure_message(MailformStrings::MESSAGE_EMPTY_MESSAGE);
+				return $this->render_notification('failure',MailformStrings::MESSAGE_EMPTY_MESSAGE);
 			}
 			
+			$interim_message = MailformStrings::MESSAGE_NOTICE_INTERIM;
 			return <<<EndOfHTML
 <div class="mail_notice_interim">
-	<p>MailformStrings::MESSAGE_NOTICE_INTERIM</p>
+	<p>$interim_message</p>
 </div>
 <div>
 	<div>
@@ -227,13 +228,13 @@ EndOfHTML;
 			$mail_checksum = $_POST['mail_digest'];
 			
 			if ($mail_checksum != $this->generate_mail_checksum($mail_from,$mail_email,$mail_subject,$mail_message)) {
-				return $this->render_failure_message(MailformStrings::MESSAGE_CHECKSUM_FAILURE);  
+				return $this->render_notification('failure', MailformStrings::MESSAGE_CHECKSUM_FAILURE);  
     		}
     		else if (!$this->send_message($mail_from,$mail_email,$mail_subject,$mail_message)) {
-    			return $this->render_failure_message(MailformStrings::MESSAGE_SUBMISSION_FAILURE);
+    			return $this->render_notification('failure', MailformStrings::MESSAGE_SUBMISSION_FAILURE);
     		}
     		else {
-    			$this->render_success_message(MailformStrings::MESSAGE_SUBMISSION_SUCCESS);
+    			$this->render_notification('success', MailformStrings::MESSAGE_SUBMISSION_SUCCESS);
     		}
     	}
     	
@@ -247,18 +248,19 @@ EndOfHTML;
     	}
     	
     	/**
-    	 * Return a failure message
+    	 * Render a message
     	 *
-    	 * Return an HTML page that defines a failure message.
+    	 * Return an HTML fragment that represents a notification message.
 		 *
+		 * @param string $status 'success' or 'failure'
     	 * @param string $message Message to output.
 		 * @return string Some HTML text.
     	 */
     	 
-    	public function render_failure_message($message)
+    	public function render_notification($status, $message)
     	{
     		return <<<EndOfHTML
-<div class="mail_notification_failure">$message</div>
+<div class="mail_notification_$status">$message</div>
 EndOfHTML;
     	}
     	
