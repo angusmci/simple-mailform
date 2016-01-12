@@ -220,7 +220,7 @@ EndOfHTML;
 
     	public function render_step3() 
     	{
-			$mail_from = $_POST['mail_from'] or 
+			$mail_from = $_POST['mail_from']; 
 			$mail_email = $_POST['mail_email'];
 			$mail_subject = $_POST['mail_subject'];
 			$mail_message = $_POST['mail_message'];
@@ -235,6 +235,15 @@ EndOfHTML;
     		else {
     			$this->render_success_message(MailformStrings::MESSAGE_SUBMISSION_SUCCESS);
     		}
+    	}
+    	
+    	public function send_message($mail_from,$mail_email,$mail_subject,$mail_message) {
+    		print "<p><b>Send not implemented yet!</b></p>";
+    		print "<p>Will send to: " . $this->get_message_destination() . 
+    			  " with subject '" .
+    			  $this->get_prefixed_subject($mail_subject) .
+    			  "'</p>";
+    		return TRUE;
     	}
     	
     	/**
