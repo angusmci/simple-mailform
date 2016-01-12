@@ -12,6 +12,14 @@
 											'log' => '',
 											'checksum_failure_log' => '');
     
+    /**
+	 * @property string $salt Salt used for generating message checksums.
+	 * @property string $recipient Recipient email address.
+	 * @property string $prefix Prefix to be added to subject of email.
+	 * @property string $logfile Path to message logfile
+	 * @property string $checksum_failure_logfile Path to logfile for failed messages
+	 */
+    
     class Mailform
     {
     	protected $salt;
@@ -105,7 +113,7 @@
 		 *
 		 * Return a string of HTML5 that defines a simple mail form.
 		 *
-		 * @return String Some HTML text.
+		 * @return string Some HTML text.
 		 */
 		 
         public function render_step1() 
@@ -141,7 +149,7 @@ EndOfHTML;
 		 * Return a string of HTML5 that defines an interstitial page, or a
 		 * validation error message if the data supplied was not valid.
 		 *
-		 * @return String Some HTML text.
+		 * @return string Some HTML text.
 		 */
 
 		public function render_step2() 
@@ -208,7 +216,7 @@ EndOfHTML;
 		 *
 		 * Return a string of HTML5 that defines a confirmation (success or failure) page.
 		 *
-		 * @return String Some HTML text.
+		 * @return string Some HTML text.
 		 */
 
     	public function render_step3() 
@@ -235,7 +243,8 @@ EndOfHTML;
     	 *
     	 * Return an HTML page that defines a failure message.
 		 *
-		 * @return String Some HTML text.
+    	 * @param string $message Message to output.
+		 * @return string Some HTML text.
     	 */
     	 
     	public function render_failure_message($message)
@@ -251,11 +260,11 @@ EndOfHTML;
     	 * Generate an MD5 checksum for a message, based on the contents of the
     	 * message and a salt supplied as part of the Mailform object's settings.
     	 *
-    	 * @param String $from Name of the user
-    	 * @param String $email Email address of the user
-    	 * @param String $subject Subject of the message
-    	 * @param String $message Content of the message
-    	 * @return String A hex string
+    	 * @param string $from Name of the user
+    	 * @param string $email Email address of the user
+    	 * @param string $subject Subject of the message
+    	 * @param string $message Content of the message
+    	 * @return string A hex string
     	 */
     	  
     	public function generate_mail_checksum($from,$email,$subject,$message) 
@@ -271,9 +280,9 @@ EndOfHTML;
     	 * does not exist, a default value is returned.
     	 *
     	 * @param Array $data An array of values
-    	 * @param String $key A key such as 'mail_from'
-    	 * @param String $default A default value
-    	 * @return String A value
+    	 * @param string $key A key such as 'mail_from'
+    	 * @param string $default A default value
+    	 * @return string A value
     	 */
     	 
     	public function get_form_value($data, $key, $default="")
@@ -293,8 +302,8 @@ EndOfHTML;
     	 * make it more identifiable. The prefix will usually identify the
     	 * website that sent the message.
     	 *
-    	 * @param String $subject The subject of the message
-    	 * @return String The subject with the prefix applied
+    	 * @param string $subject The subject of the message
+    	 * @return string The subject with the prefix applied
     	 */
     	 
     	public function get_prefixed_subject($subject)
@@ -310,7 +319,7 @@ EndOfHTML;
     	 * of a local username, the method will attempt to append the name
     	 * of the host.
     	 *
-    	 * @return String An email address
+    	 * @return string An email address
     	 */
     	 
     	public function get_message_destination()
