@@ -1,0 +1,23 @@
+{
+    "name": "nomadcode/Mailform",
+    "description": "Simple one-page mailform utility",
+    "license": "MIT",
+    "keywords": ["mailform","contact","mail"],
+    "authors": [
+        {
+            "name": "Angus McIntyre",
+            "email": "am-opensource@taumail.com"
+        }
+    ],
+    "require": {
+        "monolog/monolog": "1.0.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nomadcode\\": "src"
+        }
+    }
+}
