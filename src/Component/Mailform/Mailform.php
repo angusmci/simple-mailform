@@ -187,7 +187,7 @@ EndOfHTML;
 <div class="mail_notice_interim">
 	<p>$interim_message</p>
 </div>
-<div>
+<div class="mail_summary">
 	<div>
 		<span class="mail_field_label">From</span>
 		<span class="mail_field_value">$mail_from ($mail_email)</span>
@@ -200,7 +200,7 @@ EndOfHTML;
 		<span class="mail_field_message">Message</span>
 		<div class="mail_field_value">$mail_message</div>
 	</div>
-	<div class="mail_summary">
+	<div>
 		<form action="#" method="POST">
 			<input type="hidden" name="mail_from" value="$mail_from" id="mail_from">
 			<input type="hidden" name="mail_email" value="$mail_email" id="mail_email">
