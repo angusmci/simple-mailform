@@ -5,6 +5,9 @@
 
     namespace Nomadcode\Component\Mailform;
     
+	use Monolog\Logger;
+	use Monolog\Handler\StreamHandler;
+    
 	const DEFAULT_MAILFORM_SETTINGS = array('salt' => 'some salt',
 											'recipient' => 'webmaster',
 											'prefix' => 'web form',
@@ -239,12 +242,31 @@ EndOfHTML;
     	}
     	
     	public function send_message($mail_from,$mail_email,$mail_subject,$mail_message) {
-    		print "<p><b>Send not implemented yet!</b></p>";
-    		print "<p>Will send to: " . $this->get_message_destination() . 
-    			  " with subject '" .
-    			  $this->get_prefixed_subject($mail_subject) .
-    			  "'</p>";
-    		return TRUE;
+    		$log = new Logger('mail');
+			$log->pushHandler(new StreamHandler($self->logfile));
+			
+			$headers = "From: $mail_from ($mail_email)" . "\r\n" .
+					   "X-Mailer: PHP/" . phpversion() . "\r\n" .
+					   "X-Server: " . $_SERVER['SERVER_NAME'] . "\r\n" .
+					   "X-Submitter-IP: " . $_SERVER['REMOTE_ADDR'] . "\r\n" .
+					   "X-User-Agent: " . $_SERVER['HTTP_USER_AGENT'] . "\r\n" .
+					   "X-Script-Name: " . $_SERVER['SCRIPT_FILENAME'];
+			$recipient = $self->get_message_destination();
+			$success = mail($recipient,
+							$self->get_prefixed_subject($mail_subject),
+							$mail_message,
+							$headers);
+			$status = ( $success ? "sent" : "not sent" );
+			$logger->addInfo("Message $status", 
+							 array('to' => $recipient,
+							 	   'from' => $mail_email,
+							 	   'name' => $mail_from,
+							 	   'subject' => $mail_subject,
+							 	   'size' => strlen($mail_message),
+							 	   'succeeded' => $success,
+							 	   'ip' => $_SERVER['REMOTE_ADDR'],
+							 	   'script' => $_SERVER['SCRIPT_FILENAME']));
+			return $status;
     	}
     	
     	/**
