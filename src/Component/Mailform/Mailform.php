@@ -242,8 +242,8 @@ EndOfHTML;
     	}
     	
     	public function send_message($mail_from,$mail_email,$mail_subject,$mail_message) {
-    		$log = new Logger('mail');
-			$log->pushHandler(new StreamHandler($this->logfile));
+    		$logger = new Logger('mail');
+			$logger->pushHandler(new StreamHandler($this->logfile));
 			
 			$headers = "From: $mail_from ($mail_email)" . "\r\n" .
 					   "X-Mailer: PHP/" . phpversion() . "\r\n" .
