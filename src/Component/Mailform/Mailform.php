@@ -237,12 +237,11 @@ EndOfHTML;
     			return $this->render_notification('failure', MailformStrings::MESSAGE_SUBMISSION_FAILURE);
     		}
     		else {
-    			$this->render_notification('success', MailformStrings::MESSAGE_SUBMISSION_SUCCESS);
+    			return $this->render_notification('success', MailformStrings::MESSAGE_SUBMISSION_SUCCESS);
     		}
     	}
     	
     	public function send_message($mail_from,$mail_email,$mail_subject,$mail_message) {
-			print "<p>Trying to write to '" . $this->logfile . "'</p>";
     		$logger = new Logger('mail');
 			$logger->pushHandler(new StreamHandler($this->logfile));
 			
@@ -253,6 +252,7 @@ EndOfHTML;
 					   "X-User-Agent: " . $_SERVER['HTTP_USER_AGENT'] . "\r\n" .
 					   "X-Script-Name: " . $_SERVER['SCRIPT_FILENAME'];
 			$recipient = $this->get_message_destination();
+			
 			$success = mail($recipient,
 							$this->get_prefixed_subject($mail_subject),
 							$mail_message,
@@ -272,7 +272,7 @@ EndOfHTML;
 			}
 			catch (LogicException $e)  
 			{
-				print "<p>Tried to write to '" . $this->logfile . "' but an exception occurred: " . $e . "</p>";
+				
 			}
 			return $status;
     	}
