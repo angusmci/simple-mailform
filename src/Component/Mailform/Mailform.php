@@ -257,15 +257,22 @@ EndOfHTML;
 							$mail_message,
 							$headers);
 			$status = ( $success ? "sent" : "not sent" );
-			$logger->addInfo("Message $status", 
-							 array('to' => $recipient,
-							 	   'from' => $mail_email,
-							 	   'name' => $mail_from,
-							 	   'subject' => $mail_subject,
-							 	   'size' => strlen($mail_message),
-							 	   'succeeded' => $success,
-							 	   'ip' => $_SERVER['REMOTE_ADDR'],
-							 	   'script' => $_SERVER['SCRIPT_FILENAME']));
+			try 
+			{
+				$logger->addInfo("Message $status", 
+								 array('to' => $recipient,
+									   'from' => $mail_email,
+									   'name' => $mail_from,
+									   'subject' => $mail_subject,
+									   'size' => strlen($mail_message),
+									   'succeeded' => $success,
+									   'ip' => $_SERVER['REMOTE_ADDR'],
+									   'script' => $_SERVER['SCRIPT_FILENAME']));
+			}
+			catch (LogicException e)  
+			{
+				print "<p>Tried to write to '" . $this->logfile . "' but an exception occurred: " . e . "</p>";
+			}
 			return $status;
     	}
     	
