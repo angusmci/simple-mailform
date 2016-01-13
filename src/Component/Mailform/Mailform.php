@@ -269,9 +269,9 @@ EndOfHTML;
 									   'ip' => $_SERVER['REMOTE_ADDR'],
 									   'script' => $_SERVER['SCRIPT_FILENAME']));
 			}
-			catch (LogicException e)  
+			catch (LogicException $e)  
 			{
-				print "<p>Tried to write to '" . $this->logfile . "' but an exception occurred: " . e . "</p>";
+				print "<p>Tried to write to '" . $this->logfile . "' but an exception occurred: " . $e . "</p>";
 			}
 			return $status;
     	}
