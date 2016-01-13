@@ -172,6 +172,7 @@ EndOfHTML;
 									  ENT_QUOTES,
 									  'UTF-8');
 			$mail_checksum = $this->generate_mail_checksum($mail_from,$mail_email,$mail_subject,$mail_message);
+			$this->logger->addInfo("----\n$mail_message\n----");	// DEBUG
 			
 			// Validate email
 			
@@ -235,6 +236,7 @@ EndOfHTML;
 			$mail_message = $_POST['mail_message'];
 			$mail_checksum = $_POST['mail_digest'];
 			$mail_content_length = $_POST['mail_content_length'];
+			$this->logger->addInfo("####\n$mail_message\n####");		// DEBUG
 			
 			if ($this->verify_checksum($mail_checksum, $mail_content_length, $mail_from, 
 									   $mail_email, $mail_subject, $mail_message)) 
