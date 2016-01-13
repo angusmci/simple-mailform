@@ -136,7 +136,7 @@
 	</div>
 	<div>
 		<label for="mail_message">Message</label>
-		<textarea id="mail_message" name="mail_message" placeholder="Enter your message here" required="required"></textarea>
+		<textarea id="mail_message" name="mail_message" placeholder="Enter your message here" required="required" rows="8"></textarea>
 	</div>
 	<div>
 		<button name="submit" type="submit" value="submit">Send Message</button>
