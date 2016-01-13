@@ -9,6 +9,7 @@
         	parent::setUp();
         	$_POST = array();
         	$_SERVER = array();
+        	$_SERVER['SCRIPT_NAME'] = 'MailformTest.php';
 		}
 
 		public function test_constructor()
@@ -78,14 +79,14 @@
 			$fixture = new Mailform();
 			$_POST['mail_email'] = "This is not a valid email";
 			$this->assertEquals(
-				$fixture->render_failure_message(MailformStrings::MESSAGE_INVALID_EMAIL),
+				$fixture->render_notification('failure',MailformStrings::MESSAGE_INVALID_EMAIL),
 				$fixture->render_step2());
 			$_POST['mail_email'] = "user@example.com";
 			$this->assertEquals(
-				$fixture->render_failure_message(MailformStrings::MESSAGE_EMPTY_MESSAGE),
+				$fixture->render_notification('failure',MailformStrings::MESSAGE_EMPTY_MESSAGE),
 				$fixture->render_step2());
 			$_POST['mail_message'] = "A token message";
-			$this->assertEquals(1024,strlen($fixture->render_step2()));
+			$this->assertEquals(1148,strlen($fixture->render_step2()));
 		}
 		
 		public function test_generate_mail_checksum()
