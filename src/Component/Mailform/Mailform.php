@@ -46,13 +46,13 @@
 			$this->salt = $settings['salt'];
 			$this->recipient = $settings['recipient'];
 			$this->prefix = $settings['prefix'];
-			if (isset($settings['logfile']))
+			if (isset($settings['log']))
 			{
-				$this->logfile = $settings['logfile'];
+				$this->logfile = $settings['log'];
 			}
-			if (isset($settings['checksum_failure_logfile']))
+			if (isset($settings['checksum_failure_log']))
 			{
-				$this->checksum_failure_logfile = $settings['checksum_failure_logfile'];
+				$this->checksum_failure_logfile = $settings['checksum_failure_log'];
 			}
 		}
 		
