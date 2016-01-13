@@ -242,6 +242,7 @@ EndOfHTML;
     	}
     	
     	public function send_message($mail_from,$mail_email,$mail_subject,$mail_message) {
+			print "<p>Trying to write to '" . $this->logfile . "'</p>";
     		$logger = new Logger('mail');
 			$logger->pushHandler(new StreamHandler($this->logfile));
 			
