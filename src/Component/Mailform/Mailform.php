@@ -243,7 +243,7 @@ EndOfHTML;
     	
     	public function send_message($mail_from,$mail_email,$mail_subject,$mail_message) {
     		$log = new Logger('mail');
-			$log->pushHandler(new StreamHandler($self->logfile));
+			$log->pushHandler(new StreamHandler($this->logfile));
 			
 			$headers = "From: $mail_from ($mail_email)" . "\r\n" .
 					   "X-Mailer: PHP/" . phpversion() . "\r\n" .
@@ -251,9 +251,9 @@ EndOfHTML;
 					   "X-Submitter-IP: " . $_SERVER['REMOTE_ADDR'] . "\r\n" .
 					   "X-User-Agent: " . $_SERVER['HTTP_USER_AGENT'] . "\r\n" .
 					   "X-Script-Name: " . $_SERVER['SCRIPT_FILENAME'];
-			$recipient = $self->get_message_destination();
+			$recipient = $this->get_message_destination();
 			$success = mail($recipient,
-							$self->get_prefixed_subject($mail_subject),
+							$this->get_prefixed_subject($mail_subject),
 							$mail_message,
 							$headers);
 			$status = ( $success ? "sent" : "not sent" );
