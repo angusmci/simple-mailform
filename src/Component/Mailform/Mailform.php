@@ -189,15 +189,15 @@ EndOfHTML;
 </div>
 <div class="mail_summary">
 	<div>
-		<span class="mail_field_label">From</span>
-		<span class="mail_field_value">$mail_from ($mail_email)</span>
+		<div class="mail_field_label">From</div>
+		<div class="mail_field_value">$mail_from ($mail_email)</div>
 	</div>
 	<div>	
-		<span class="mail_field_label">Subject</span>
-		<span class="mail_field_value">$mail_subject</span>
+		<div class="mail_field_label">Subject</div>
+		<div class="mail_field_value">$mail_subject</div>
 	</div>
 	<div>
-		<span class="mail_field_label">Message</span>
+		<div class="mail_field_label">Message</div>
 		<div class="mail_field_value">$mail_message</div>
 	</div>
 	<div>
