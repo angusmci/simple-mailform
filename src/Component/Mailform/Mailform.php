@@ -47,13 +47,14 @@
 			$this->salt = $settings['salt'];
 			$this->recipient = $settings['recipient'];
 			$this->prefix = $settings['prefix'];
-			if (isset($settings['log']))
+			if (isset($settings['log']) and $settings['log'])
 			{
 				$this->logfile = $settings['log'];
 				$this->logger = new Logger('mail');
 				$this->logger->pushHandler(new StreamHandler($this->logfile));
 			}
-			if (isset($settings['checksum_failure_log']))
+			if (isset($settings['checksum_failure_log']) and
+				$settings['checksum_failure_log'])
 			{
 				$this->checksum_failure_logfile = $settings['checksum_failure_log'];
 			}
@@ -164,7 +165,7 @@ EndOfHTML;
 			$mail_email = $this->get_form_value($_POST, 'mail_email', "");
 			$mail_subject = $this->get_form_value($_POST, 'mail_subject',
 												  MailformStrings::DEFAULT_SUBJECT);
-			$mail_message = $this->get_form_value($_POST,'mail_message',"")
+			$mail_message = $this->get_form_value($_POST,'mail_message',"");
 			
 			$mail_from_encoded = htmlentities($mail_from, ENT_QUOTES, 'UTF-8');
 			$mail_email_encoded = htmlentities($mail_email, ENT_QUOTES, 'UTF-8');
@@ -175,7 +176,10 @@ EndOfHTML;
 														   $mail_email,
 														   $mail_subject,
 														   $mail_message);
-			$this->logger->addInfo("----\n$mail_message\n----");	// DEBUG
+			if ($this->logger) {
+				print "Logger = '" . $this->logfile . "'";
+				$this->logger->addInfo("----\n$mail_message\n----");	// DEBUG
+			}
 			
 			// Validate email
 			
@@ -239,7 +243,9 @@ EndOfHTML;
 			$mail_message = $_POST['mail_message'];
 			$mail_checksum = $_POST['mail_digest'];
 			$mail_content_length = $_POST['mail_content_length'];
-			$this->logger->addInfo("####\n$mail_message\n####");		// DEBUG
+			if ($this->logger) {
+				$this->logger->addInfo("####\n$mail_message\n####");		// DEBUG
+			}
 			
 			if ($this->verify_checksum($mail_checksum, $mail_content_length, $mail_from, 
 									   $mail_email, $mail_subject, $mail_message)) 
