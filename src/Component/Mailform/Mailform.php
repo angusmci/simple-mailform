@@ -200,7 +200,7 @@ EndOfHTML;
 		<span class="mail_field_message">Message</span>
 		<div class="mail_field_value">$mail_message</div>
 	</div>
-	<div>
+	<div class="mail_summary">
 		<form action="#" method="POST">
 			<input type="hidden" name="mail_from" value="$mail_from" id="mail_from">
 			<input type="hidden" name="mail_email" value="$mail_email" id="mail_email">
