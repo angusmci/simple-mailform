@@ -28,6 +28,7 @@
     	protected $recipient;
     	protected $prefix;
     	protected $logfile;
+    	protected $logger;
     	protected $checksum_failure_logfile;
     	
     	/**
@@ -49,6 +50,8 @@
 			if (isset($settings['log']))
 			{
 				$this->logfile = $settings['log'];
+				$this->logger = new Logger('mail');
+				$this->logger->pushHandler(new StreamHandler($this->logfile));
 			}
 			if (isset($settings['checksum_failure_log']))
 			{
@@ -182,6 +185,7 @@ EndOfHTML;
 				return $this->render_notification('failure',MailformStrings::MESSAGE_EMPTY_MESSAGE);
 			}
 			
+			$mail_content_length = strlen($mail_message);
 			$interim_message = MailformStrings::MESSAGE_NOTICE_INTERIM;
 			return <<<EndOfHTML
 <div class="mail_notice_interim">
@@ -207,6 +211,7 @@ EndOfHTML;
 			<input type="hidden" name="mail_subject" value="$mail_subject" id="mail_subject">
 			<input type="hidden" name="mail_message" value="$mail_message" id="mail_message">
 			<input type="hidden" name="mail_digest" value="$mail_checksum" id="mail_digest">
+			<input type="hidden" name="mail_content_length" value="$mail_content_length" id="mail_content_length">
 			<button name="submit" type="submit" value="submit">Send Message</button>	
 		</form>
 	</div>
@@ -229,22 +234,58 @@ EndOfHTML;
 			$mail_subject = $_POST['mail_subject'];
 			$mail_message = $_POST['mail_message'];
 			$mail_checksum = $_POST['mail_digest'];
+			$mail_content_length = $_POST['mail_content_length'];
 			
-			if ($mail_checksum != $this->generate_mail_checksum($mail_from,$mail_email,$mail_subject,$mail_message)) {
-				return $this->render_notification('failure', MailformStrings::MESSAGE_CHECKSUM_FAILURE);  
+			if ($$this->verify_checksum($mail_checksum, $mail_content_length, $mail_from, 
+										$mail_email, $mail_subject, $mail_message)) 
+			{
+				return $this->render_notification(
+					'failure', 
+					MailformStrings::MESSAGE_CHECKSUM_FAILURE);  
     		}
-    		else if (!$this->send_message($mail_from,$mail_email,$mail_subject,$mail_message)) {
-    			return $this->render_notification('failure', MailformStrings::MESSAGE_SUBMISSION_FAILURE);
+    		else if (!$this->send_message($mail_from, $mail_email, 
+    									  $mail_subject, $mail_message)) 
+    		{
+    			return $this->render_notification(
+    				'failure', 
+    				MailformStrings::MESSAGE_SUBMISSION_FAILURE);
     		}
     		else {
-    			return $this->render_notification('success', MailformStrings::MESSAGE_SUBMISSION_SUCCESS);
+    			return $this->render_notification(
+    				'success', 
+    				MailformStrings::MESSAGE_SUBMISSION_SUCCESS);
     		}
     	}
     	
+    	public function verify_checksum($mail_checksum, $mail_content_length, $mail_from,
+    									$mail_email, $mail_subject, $mail_message)
+    	{
+    		$computed_checksum = $this->generate_mail_checksum($mail_from, 
+    														   $mail_email,
+    														   $mail_subject, 
+    														   $mail_message);
+    		if ($computed_checksum == $mail_checksum)
+    		{
+    			return TRUE;
+    		}
+    		if ($this->logger) 
+    		{
+				$this->logger->addInfo("Checksum failure", 
+										 array('to' => $recipient,
+											   'from' => $mail_email,
+											   'name' => $mail_from,
+											   'subject' => $mail_subject,
+											   'size' => strlen($mail_message),
+											   'expected_size' => $mail_content_length,
+											   'checksum' => $computed_checksum,
+											   'expected_checksum' => $mail_checksum,
+											   'ip' => $_SERVER['REMOTE_ADDR'],
+											   'script' => $_SERVER['SCRIPT_FILENAME']));
+			}
+			return FALSE;
+    	}
+    	
     	public function send_message($mail_from,$mail_email,$mail_subject,$mail_message) {
-    		$logger = new Logger('mail');
-			$logger->pushHandler(new StreamHandler($this->logfile));
-			
 			$headers = "From: $mail_from ($mail_email)" . "\r\n" .
 					   "X-Mailer: PHP/" . phpversion() . "\r\n" .
 					   "X-Server: " . $_SERVER['SERVER_NAME'] . "\r\n" .
@@ -260,15 +301,17 @@ EndOfHTML;
 			$status = ( $success ? "sent" : "not sent" );
 			try 
 			{
-				$logger->addInfo("Message $status", 
-								 array('to' => $recipient,
-									   'from' => $mail_email,
-									   'name' => $mail_from,
-									   'subject' => $mail_subject,
-									   'size' => strlen($mail_message),
-									   'succeeded' => $success,
-									   'ip' => $_SERVER['REMOTE_ADDR'],
-									   'script' => $_SERVER['SCRIPT_FILENAME']));
+				if ($this->logger) {
+					$this->logger->addInfo("Message $status", 
+											 array('to' => $recipient,
+												   'from' => $mail_email,
+												   'name' => $mail_from,
+												   'subject' => $mail_subject,
+												   'size' => strlen($mail_message),
+												   'succeeded' => $success,
+												   'ip' => $_SERVER['REMOTE_ADDR'],
+												   'script' => $_SERVER['SCRIPT_FILENAME']));
+				}
 			}
 			catch (LogicException $e)  
 			{
