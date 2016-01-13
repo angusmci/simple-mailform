@@ -197,7 +197,7 @@ EndOfHTML;
 		<span class="mail_field_value">$mail_subject</span>
 	</div>
 	<div>
-		<span class="mail_field_message">Message</span>
+		<span class="mail_field_label">Message</span>
 		<div class="mail_field_value">$mail_message</div>
 	</div>
 	<div>
