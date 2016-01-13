@@ -236,8 +236,8 @@ EndOfHTML;
 			$mail_checksum = $_POST['mail_digest'];
 			$mail_content_length = $_POST['mail_content_length'];
 			
-			if ($$this->verify_checksum($mail_checksum, $mail_content_length, $mail_from, 
-										$mail_email, $mail_subject, $mail_message)) 
+			if ($this->verify_checksum($mail_checksum, $mail_content_length, $mail_from, 
+									   $mail_email, $mail_subject, $mail_message)) 
 			{
 				return $this->render_notification(
 					'failure', 
