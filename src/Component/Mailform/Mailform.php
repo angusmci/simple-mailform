@@ -270,6 +270,7 @@ EndOfHTML;
     		}
     		if ($this->logger) 
     		{
+				$recipient = $this->get_message_destination();
 				$this->logger->addInfo("Checksum failure", 
 										 array('to' => $recipient,
 											   'from' => $mail_email,
