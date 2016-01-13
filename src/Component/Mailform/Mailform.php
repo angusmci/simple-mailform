@@ -217,7 +217,8 @@ EndOfHTML;
 			<input type="hidden" name="mail_from" value="$mail_from" id="mail_from">
 			<input type="hidden" name="mail_email" value="$mail_email" id="mail_email">
 			<input type="hidden" name="mail_subject" value="$mail_subject" id="mail_subject">
-			<input type="hidden" name="mail_message" value="$mail_message" id="mail_message">
+			<!-- <input type="hidden" name="mail_message" value="" id="mail_message"> -->
+			<textarea name="mail_message">$mail_message</textarea>
 			<input type="hidden" name="mail_digest" value="$mail_checksum" id="mail_digest">
 			<input type="hidden" name="mail_content_length" value="$mail_content_length" id="mail_content_length">
 			<button name="submit" type="submit" value="submit">Send Message</button>	
