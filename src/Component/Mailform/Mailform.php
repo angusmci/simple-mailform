@@ -159,19 +159,22 @@ EndOfHTML;
 
 		public function render_step2() 
 		{
-			$mail_from = htmlentities($this->get_form_value($_POST,'mail_from',MailformStrings::DEFAULT_FROM),
-									  ENT_QUOTES,
-									  'UTF-8');
-			$mail_email = htmlentities($this->get_form_value($_POST,'mail_email',""),
-									  ENT_QUOTES,
-									  'UTF-8');
-			$mail_subject = htmlentities($this->get_form_value($_POST,'mail_subject',MailformStrings::DEFAULT_SUBJECT),
-									  ENT_QUOTES,
-									  'UTF-8');
-			$mail_message = htmlentities($this->get_form_value($_POST,'mail_message',""),
-									  ENT_QUOTES,
-									  'UTF-8');
-			$mail_checksum = $this->generate_mail_checksum($mail_from,$mail_email,$mail_subject,$mail_message);
+			$mail_from = $this->get_form_value($_POST, 'mail_from',
+											   MailformStrings::DEFAULT_FROM);
+			$mail_email = $this->get_form_value($_POST, 'mail_email', "");
+			$mail_subject = $this->get_form_value($_POST, 'mail_subject',
+												  MailformStrings::DEFAULT_SUBJECT);
+			$mail_message = $this->get_form_value($_POST,'mail_message',"")
+			
+			$mail_from_encoded = htmlentities($mail_from, ENT_QUOTES, 'UTF-8');
+			$mail_email_encoded = htmlentities($mail_email, ENT_QUOTES, 'UTF-8');
+			$mail_subject_encoded = htmlentities($mail_subject, ENT_QUOTES, 'UTF-8');
+			$mail_message_encoded = htmlentities($mail_message, ENT_QUOTES, 'UTF-8');
+			
+			$mail_checksum = $this->generate_mail_checksum($mail_from,
+														   $mail_email,
+														   $mail_subject,
+														   $mail_message);
 			$this->logger->addInfo("----\n$mail_message\n----");	// DEBUG
 			
 			// Validate email
@@ -195,15 +198,15 @@ EndOfHTML;
 <div class="mail_summary">
 	<div>
 		<div class="mail_field_label">From</div>
-		<div class="mail_field_value">$mail_from ($mail_email)</div>
+		<div class="mail_field_value">$mail_from_encoded ($mail_email_encoded)</div>
 	</div>
 	<div>	
 		<div class="mail_field_label">Subject</div>
-		<div class="mail_field_value">$mail_subject</div>
+		<div class="mail_field_value">$mail_subject_encoded</div>
 	</div>
 	<div>
 		<div class="mail_field_label">Message</div>
-		<div class="mail_field_value">$mail_message</div>
+		<div class="mail_field_value">$mail_message_encoded</div>
 	</div>
 	<div>
 		<form action="#" method="POST">
