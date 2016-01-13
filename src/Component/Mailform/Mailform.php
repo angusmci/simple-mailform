@@ -176,11 +176,7 @@ EndOfHTML;
 														   $mail_email,
 														   $mail_subject,
 														   $mail_message);
-			if ($this->logger) {
-				print "Logger = '" . $this->logfile . "'";
-				$this->logger->addInfo("----\n$mail_message\n----");	// DEBUG
-			}
-			
+
 			// Validate email
 			
 			if (filter_var($mail_email, FILTER_VALIDATE_EMAIL) === FALSE) {
@@ -192,6 +188,8 @@ EndOfHTML;
 			if ($mail_message == "") {
 				return $this->render_notification('failure',MailformStrings::MESSAGE_EMPTY_MESSAGE);
 			}
+			
+			// Output a confirmation page showing the complete email.
 			
 			$mail_content_length = strlen($mail_message);
 			$interim_message = MailformStrings::MESSAGE_NOTICE_INTERIM;
@@ -218,7 +216,6 @@ EndOfHTML;
 			<input type="hidden" name="mail_email" value="$mail_email_encoded" id="mail_email">
 			<input type="hidden" name="mail_subject" value="$mail_subject_encoded" id="mail_subject">
 			<input type="hidden" name="mail_message" value="$mail_message_encoded" id="mail_message">
-			<!-- <textarea name="mail_message">$mail_message</textarea> -->
 			<input type="hidden" name="mail_digest" value="$mail_checksum" id="mail_digest">
 			<input type="hidden" name="mail_content_length" value="$mail_content_length" id="mail_content_length">
 			<button name="submit" type="submit" value="submit">Send Message</button>	
@@ -244,9 +241,6 @@ EndOfHTML;
 			$mail_message = $_POST['mail_message'];
 			$mail_checksum = $_POST['mail_digest'];
 			$mail_content_length = $_POST['mail_content_length'];
-			if ($this->logger) {
-				$this->logger->addInfo("####\n$mail_message\n####");		// DEBUG
-			}
 			
 			if (!$this->verify_checksum($mail_checksum, $mail_content_length, $mail_from, 
 									    $mail_email, $mail_subject, $mail_message)) 
