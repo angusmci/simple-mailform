@@ -347,7 +347,7 @@ EndOfHTML;
     	public function render_notification($status, $message)
     	{
     		return <<<EndOfHTML
-<div class="mailform__notification mailform__notification--$status">$message</div>
+<div class="mailform__notification mailform__notification--$status"><p>$message</p></div>
 EndOfHTML;
     	}
     	
