@@ -134,23 +134,23 @@
 </div>
 <form class="mailform__form" action="#" method="POST">
 	<div>
-		<label for="mail_from">From</label>
-		<input type="text" name="mail_from" id="mail_from" placeholder="Your Name" />
+		<label for="mail_from" class="mailform__summary__label">From</label>
+		<input type="text" name="mail_from" id="mail_from" class="mailform__summary__value" placeholder="Your Name" />
 	</div>
 	<div>
-		<label for="mail_email">Email</label>
-		<input type="email" name="mail_email" id="mail_email" placeholder="you@yourdomain.com" required="required"/>
+		<label for="mail_email" class="mailform__summary__label">Email</label>
+		<input type="email" name="mail_email" id="mail_email" class="mailform__summary__value"  placeholder="you@yourdomain.com" required="required"/>
 	</div>
 	<div>
-		<label for="mail_subject">Subject</label>
-		<input type="text" name="mail_subject" id="mail_subject" placeholder="Comment" />
+		<label for="mail_subject" class="mailform__summary__label">Subject</label>
+		<input type="text" name="mail_subject" id="mail_subject" class="mailform__summary__value"  placeholder="Comment" />
 	</div>
 	<div>
-		<label for="mail_message">Message</label>
-		<textarea id="mail_message" name="mail_message" placeholder="Enter your message here" required="required" rows="$this->textlines"></textarea>
+		<label for="mail_message" class="mailform__summary__label">Message</label>
+		<textarea id="mail_message" name="mail_message" class="mailform__summary__value" placeholder="Enter your message here" required="required" rows="$this->textlines"></textarea>
 	</div>
 	<div>
-		<button name="submit" type="submit" value="submit">Send Message</button>
+		<button name="submit" type="submit" value="submit" class="mailform__button">Send Message</button>
 	</div>
 </form>
 EndOfHTML;
@@ -225,7 +225,7 @@ EndOfHTML;
 			<input type="hidden" name="mail_message" value="$mail_message_encoded" id="mail_message">
 			<input type="hidden" name="mail_digest" value="$mail_checksum" id="mail_digest">
 			<input type="hidden" name="mail_content_length" value="$mail_content_length" id="mail_content_length">
-			<button name="submit" type="submit" value="submit">Send Message</button>	
+			<button name="submit" type="submit" class="mailform__button" value="submit">Send Message</button>	
 		</form>
 	</div>
 </div>
