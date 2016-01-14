@@ -13,6 +13,7 @@
 											'prefix' => 'web form',
 											'log' => '',
 											'checksum_failure_log' => '');
+	const DEFAULT_TEXTLINES = 8;
     
     /**
 	 * @property string $salt Salt used for generating message checksums.
@@ -30,6 +31,8 @@
     	protected $logfile;
     	protected $logger;
     	protected $checksum_failure_logfile;
+    	protected $greeting;
+    	protected $textlines;
     	
     	/**
  		 * Constructor
@@ -39,11 +42,12 @@
  		 * @param array $settings Array containing settings for the Mailform.
 		 */
 		 
-		public function __construct($settings = "")
+		public function __construct($settings = DEFAULT_MAILFORM_SETTINGS, 
+									$message = MailformStrings::DEFAULT_GREETING, 
+									$textlines = DEFAULT_TEXTLINES)
 		{
-			if (!$settings) {
-				$settings = DEFAULT_MAILFORM_SETTINGS;
-			}
+			$this->greeting = $message;
+			$this->textlines = $textlines;
 			$this->salt = $settings['salt'];
 			$this->recipient = $settings['recipient'];
 			$this->prefix = $settings['prefix'];
@@ -125,6 +129,7 @@
         public function render_step1() 
         {
         	return <<<EndOfHTML
+<div class="greeting">$this->greeting</div>
 <form action="#" method="POST">
 	<div>
 		<label for="mail_from">From</label>
@@ -140,7 +145,7 @@
 	</div>
 	<div>
 		<label for="mail_message">Message</label>
-		<textarea id="mail_message" name="mail_message" placeholder="Enter your message here" required="required" rows="8"></textarea>
+		<textarea id="mail_message" name="mail_message" placeholder="Enter your message here" required="required" rows="$this->textlines"></textarea>
 	</div>
 	<div>
 		<button name="submit" type="submit" value="submit">Send Message</button>

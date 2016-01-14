@@ -18,6 +18,11 @@
 		const DEFAULT_FROM = "Anonymous";
 		const DEFAULT_SUBJECT = "Comment";
 		
+		const DEFAULT_GREETING = <<<EndOfText
+To send email to the owner of this website, please fill in the form below. Please 
+remember to include a valid email address so that we can reply to you.
+EndOfText;
+		
 		const MESSAGE_VALIDATION_FAILURE = <<<EndOfText
 Your message could not be sent, because there was a problem with the information that
 you entered. Please make sure that you have entered a valid email address, your name,
@@ -25,7 +30,7 @@ and the text of your message.
 EndOfText;
 		const MESSAGE_CHECKSUM_FAILURE = <<<EndOfText
 Your message could not be sent, because it appears that you are trying to use an
-automatic process to send mail. This form only accepts mail from human senders.
+automated process to send mail. This form only accepts mail from human senders.
 EndOfText;
 		const MESSAGE_SUBMISSION_FAILURE = <<<EndOfText
 Your message could not be sent because an error occurred. Please try again later, or
