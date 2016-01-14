@@ -134,20 +134,20 @@
 </div>
 <form class="mailform__form" action="#" method="POST">
 	<div>
-		<label for="mail_from" class="mailform__summary__label">From</label>
-		<input type="text" name="mail_from" id="mail_from" class="mailform__summary__value" placeholder="Your Name" />
+		<label for="mail_from" class="mailform__label">From</label>
+		<input type="text" name="mail_from" id="mail_from" class="mailform__value" placeholder="Your Name" />
 	</div>
 	<div>
-		<label for="mail_email" class="mailform__summary__label">Email</label>
-		<input type="email" name="mail_email" id="mail_email" class="mailform__summary__value"  placeholder="you@yourdomain.com" required="required"/>
+		<label for="mail_email" class="mailform__label">Email</label>
+		<input type="email" name="mail_email" id="mail_email" class="mailform__value"  placeholder="you@yourdomain.com" required="required"/>
 	</div>
 	<div>
-		<label for="mail_subject" class="mailform__summary__label">Subject</label>
-		<input type="text" name="mail_subject" id="mail_subject" class="mailform__summary__value"  placeholder="Comment" />
+		<label for="mail_subject" class="mailform__label">Subject</label>
+		<input type="text" name="mail_subject" id="mail_subject" class="mailform__value"  placeholder="Comment" />
 	</div>
 	<div>
-		<label for="mail_message" class="mailform__summary__label">Message</label>
-		<textarea id="mail_message" name="mail_message" class="mailform__summary__value" placeholder="Enter your message here" required="required" rows="$this->textlines"></textarea>
+		<label for="mail_message" class="mailform__label">Message</label>
+		<textarea id="mail_message" name="mail_message" class="mailform__value" placeholder="Enter your message here" required="required" rows="$this->textlines"></textarea>
 	</div>
 	<div>
 		<button name="submit" type="submit" value="submit" class="mailform__button">Send Message</button>
@@ -206,16 +206,16 @@ EndOfHTML;
 </div>
 <div class="mailform__summary">
 	<div>
-		<div class="mailform__summary__label">From</div>
-		<div class="mailform__summary__value">$mail_from_encoded ($mail_email_encoded)</div>
+		<div class="mailform__label">From</div>
+		<div class="mailform__value">$mail_from_encoded ($mail_email_encoded)</div>
 	</div>
 	<div>	
-		<div class="mailform__summary__label">Subject</div>
-		<div class="mailform__summary__value">$mail_subject_encoded</div>
+		<div class="mailform__label">Subject</div>
+		<div class="mailform__value">$mail_subject_encoded</div>
 	</div>
 	<div>
-		<div class="mailform__summary__label">Message</div>
-		<div class="mailform__summary__value">$mail_message_encoded</div>
+		<div class="mailform__label">Message</div>
+		<div class="mailform__value">$mail_message_encoded</div>
 	</div>
 	<div>
 		<form action="#" method="POST">
@@ -347,7 +347,7 @@ EndOfHTML;
     	public function render_notification($status, $message)
     	{
     		return <<<EndOfHTML
-<div class="mailform__notification--$status">$message</div>
+<div class="mailform__notification mailform__notification--$status">$message</div>
 EndOfHTML;
     	}
     	
