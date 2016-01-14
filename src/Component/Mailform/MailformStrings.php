@@ -37,7 +37,7 @@ Your message could not be sent because an error occurred. Please try again later
 use an alternative way to contact us.
 EndOfText;
 		const MESSAGE_SUBMISSION_SUCCESS = <<<EndOfText
-Your message has been successfully sent. Thank you.
+Your message has been sent successfully. Thank you.
 EndOfText;
 		const MESSAGE_INVALID_EMAIL = <<<EndOfText
 You did not enter a valid email address. Please use your browser's Back button to go back and try again.
