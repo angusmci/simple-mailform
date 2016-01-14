@@ -86,7 +86,7 @@
 				$fixture->render_notification('failure',MailformStrings::MESSAGE_EMPTY_MESSAGE),
 				$fixture->render_step2());
 			$_POST['mail_message'] = "A token message";
-			$this->assertEquals(1245,strlen($fixture->render_step2()));
+			$this->assertEquals(1296,strlen($fixture->render_step2()));
 		}
 		
 		public function test_generate_mail_checksum()

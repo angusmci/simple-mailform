@@ -129,8 +129,10 @@
         public function render_step1() 
         {
         	return <<<EndOfHTML
-<div class="greeting">$this->greeting</div>
-<form action="#" method="POST">
+<div class="mailform__greeting">
+	<p>$this->greeting</p>
+</div>
+<form class="mailform__form" action="#" method="POST">
 	<div>
 		<label for="mail_from">From</label>
 		<input type="text" name="mail_from" id="mail_from" placeholder="Your Name" />
@@ -199,21 +201,21 @@ EndOfHTML;
 			$mail_content_length = strlen($mail_message);
 			$interim_message = MailformStrings::MESSAGE_NOTICE_INTERIM;
 			return <<<EndOfHTML
-<div class="mail_notice_interim">
+<div class="mailform__interim">
 	<p>$interim_message</p>
 </div>
-<div class="mail_summary">
+<div class="mailform__summary">
 	<div>
-		<div class="mail_field_label">From</div>
-		<div class="mail_field_value">$mail_from_encoded ($mail_email_encoded)</div>
+		<div class="mailform__summary__label">From</div>
+		<div class="mailform__summary__value">$mail_from_encoded ($mail_email_encoded)</div>
 	</div>
 	<div>	
-		<div class="mail_field_label">Subject</div>
-		<div class="mail_field_value">$mail_subject_encoded</div>
+		<div class="mailform__summary__label">Subject</div>
+		<div class="mailform__summary__value">$mail_subject_encoded</div>
 	</div>
 	<div>
-		<div class="mail_field_label">Message</div>
-		<div class="mail_field_value">$mail_message_encoded</div>
+		<div class="mailform__summary__label">Message</div>
+		<div class="mailform__summary__value">$mail_message_encoded</div>
 	</div>
 	<div>
 		<form action="#" method="POST">
@@ -345,7 +347,7 @@ EndOfHTML;
     	public function render_notification($status, $message)
     	{
     		return <<<EndOfHTML
-<div class="mail_notification_$status">$message</div>
+<div class="mailform__notification--$status">$message</div>
 EndOfHTML;
     	}
     	
