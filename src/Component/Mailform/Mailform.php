@@ -343,6 +343,7 @@ EndOfHTML;
             $headers = "From: $mail_email ($mail_from)" . "\r\n" .
                        "X-Mailer: PHP/" . phpversion() . "\r\n" .
                        "X-Server: " . $_SERVER['SERVER_NAME'] . "\r\n" .
+                       "X-Server-IP: " . $_SERVER['SERVER_ADDR'] . "\r\n" .
                        "X-Submitter-IP: " . $remote_addr . "\r\n" .
                        "X-User-Agent: " . $http_user_agent . "\r\n" .
                        "X-Script-Name: " . $_SERVER['SCRIPT_FILENAME'];
