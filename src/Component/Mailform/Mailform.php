@@ -503,10 +503,10 @@ EndOfHTML;
             }
             return $this->recipient;
         }
-        
+
         public function truncate_message_body($body)
         {
-            return substr($body, 0, $MAXIMUM_BODY_SIZE);
+            return substr($body, 0, MAXIMUM_BODY_SIZE);
         }
     }
     
