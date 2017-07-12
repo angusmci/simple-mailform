@@ -5,9 +5,9 @@
 
     namespace Nomadcode\Component\Mailform;
     
-    use Monolog\Logger;
     use Monolog\Handler\StreamHandler;
-    
+    use Monolog\Logger;
+
     const DEFAULT_MAILFORM_SETTINGS = array('salt' => 'some salt',
                                             'recipient' => 'webmaster',
                                             'prefix' => 'web form',
@@ -37,13 +37,15 @@
         protected $greeting;
         protected $textlines;
         protected $algorithm;
-        
+
         /**
          * Constructor
          *
          * Construct a Mailform object.
-         * 
+         *
          * @param array $settings Array containing settings for the Mailform.
+         * @param string $message
+         * @param int $textlines
          */
          
         public function __construct($settings = DEFAULT_MAILFORM_SETTINGS, 
@@ -275,17 +277,23 @@ EndOfHTML;
                     MailformStrings::MESSAGE_SUBMISSION_SUCCESS);
             }
         }
-        
+
         /**
          * Verify the digest passed with the message.
          *
          * Verify that the digest matches the content of the message.
          *
-         * @return boolean TRUE or FALSE.
+         * @param $mail_digest
+         * @param $mail_content_length
+         * @param $mail_from
+         * @param $mail_email
+         * @param $mail_subject
+         * @param $mail_message
+         * @return bool TRUE or FALSE.
          */
 
         public function verify_digest($mail_digest, $mail_content_length, $mail_from,
-                                        $mail_email, $mail_subject, $mail_message)
+                                      $mail_email, $mail_subject, $mail_message)
         {
             $computed_checksum = $this->generate_mail_hash($mail_from, 
                                                                $mail_email,
@@ -335,11 +343,11 @@ EndOfHTML;
             $headers = "From: $mail_from ($mail_email)" . "\r\n" .
                        "X-Mailer: PHP/" . phpversion() . "\r\n" .
                        "X-Server: " . $_SERVER['SERVER_NAME'] . "\r\n" .
-                       "X-Submitter-IP: " . remote_addr . "\r\n" .
+                       "X-Submitter-IP: " . $remote_addr . "\r\n" .
                        "X-User-Agent: " . $http_user_agent . "\r\n" .
                        "X-Script-Name: " . $_SERVER['SCRIPT_FILENAME'];
             $recipient = $this->get_message_destination();
-            $mail_message = $this->truncate_message_body();
+            $mail_message = $this->truncate_message_body($mail_message);
             
             $success = mail($recipient,
                             $this->get_prefixed_subject($mail_subject),
@@ -360,7 +368,7 @@ EndOfHTML;
                                                    'script' => $_SERVER['SCRIPT_FILENAME']));
                 }
             }
-            catch (LogicException $e)  
+            catch (\LogicException $e)
             {
                 
             }
@@ -376,7 +384,7 @@ EndOfHTML;
          * @return string
          **/
          
-        public function filter_email($email) 
+        private function filter_email($email)
         {
             $rule = array("\r" => '',
                           "\n" => '',
@@ -388,7 +396,7 @@ EndOfHTML;
             return strtr($email, $rule);
         }
 
-        public function _filter_name($name)
+        private function filter_name($name)
         {
             $rule = array("\r" => '',
                           "\n" => '',
@@ -400,7 +408,7 @@ EndOfHTML;
             return trim(strtr($name, $rule));
         }
 
-        public function _filter_other($data) 
+        private function filter_other($data)
         {
             $rule = array("\r" => '',
                           "\n" => '',
@@ -452,7 +460,7 @@ EndOfHTML;
          * value is trimmed before returning it. If the requested item
          * does not exist, a default value is returned.
          *
-         * @param Array $data An array of values
+         * @param array $data An array of values
          * @param string $key A key such as 'mail_from'
          * @param string $default A default value
          * @return string A value
