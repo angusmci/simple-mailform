@@ -345,6 +345,7 @@ EndOfHTML;
                             $this->get_prefixed_subject($mail_subject),
                             $mail_message,
                             $headers);
+            $status = ( $success ? "sent" : "not sent" );
             try 
             {
                 if ($this->logger) {
