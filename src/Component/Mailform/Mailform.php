@@ -12,15 +12,16 @@
 											'recipient' => 'webmaster',
 											'prefix' => 'web form',
 											'log' => '',
-											'checksum_failure_log' => '');
+											'check_failure_log' => '',
+											'hash_algorithm' => 'sha256');
 	const DEFAULT_TEXTLINES = 8;
     
     /**
-	 * @property string $salt Salt used for generating message checksums.
+	 * @property string $salt Salt used for generating message hashes.
 	 * @property string $recipient Recipient email address.
 	 * @property string $prefix Prefix to be added to subject of email.
 	 * @property string $logfile Path to message logfile
-	 * @property string $checksum_failure_logfile Path to logfile for failed messages
+	 * @property string $check_failure_logfile Path to logfile for failed messages
 	 */
     
     class Mailform
@@ -30,9 +31,10 @@
     	protected $prefix;
     	protected $logfile;
     	protected $logger;
-    	protected $checksum_failure_logfile;
+    	protected $check_failure_logfile;
     	protected $greeting;
     	protected $textlines;
+    	protected $algorithm;
     	
     	/**
  		 * Constructor
@@ -51,16 +53,19 @@
 			$this->salt = $settings['salt'];
 			$this->recipient = $settings['recipient'];
 			$this->prefix = $settings['prefix'];
+			$this->algorithm = (isset($settings['hash_algorithm']) ? 
+								$settings['hash_algorithm'] :
+								'sha256');
 			if (isset($settings['log']) and $settings['log'])
 			{
 				$this->logfile = $settings['log'];
 				$this->logger = new Logger('mail');
 				$this->logger->pushHandler(new StreamHandler($this->logfile));
 			}
-			if (isset($settings['checksum_failure_log']) and
-				$settings['checksum_failure_log'])
+			if (isset($settings['check_failure_log']) and
+				$settings['check_failure_log'])
 			{
-				$this->checksum_failure_logfile = $settings['checksum_failure_log'];
+				$this->check_failure_logfile = $settings['check_failure_log'];
 			}
 		}
 		
@@ -71,13 +76,13 @@
 		 * is controlled by the presence of certain $_POST variables. If
 		 * there is no $_POST data, it will render an empty mailform, ready
 		 * to accept information. If data has been supplied, it will render
-		 * an interstitial confirmation page. If a checksum is included in
+		 * an interstitial confirmation page. If a hash is included in
 		 * the data, it will send the message.
 		 */
 		 
 		public function process()
 		{
-			if ($this->has_checksum()) {
+			if ($this->has_digest()) {
 				print $this->render_step3();
 			}
 			else if ($this->has_data()) {
@@ -97,7 +102,7 @@
 		 * @return Boolean Return TRUE if a checksum is present.
 		 */
 		 
-		public function has_checksum() {
+		public function has_digest() {
 			return array_key_exists('mail_digest', $_POST);
 		}
 		
@@ -179,10 +184,10 @@ EndOfHTML;
 			$mail_subject_encoded = htmlentities($mail_subject, ENT_QUOTES, 'UTF-8');
 			$mail_message_encoded = htmlentities($mail_message, ENT_QUOTES, 'UTF-8');
 			
-			$mail_checksum = $this->generate_mail_checksum($mail_from,
-														   $mail_email,
-														   $mail_subject,
-														   $mail_message);
+			$mail_digest = $this->generate_mail_hash($mail_from,
+													 $mail_email,
+													 $mail_subject,
+													 $mail_message);
 
 			// Validate email
 			
@@ -223,7 +228,7 @@ EndOfHTML;
 			<input type="hidden" name="mail_email" value="$mail_email_encoded" id="mail_email">
 			<input type="hidden" name="mail_subject" value="$mail_subject_encoded" id="mail_subject">
 			<input type="hidden" name="mail_message" value="$mail_message_encoded" id="mail_message">
-			<input type="hidden" name="mail_digest" value="$mail_checksum" id="mail_digest">
+			<input type="hidden" name="mail_digest" value="$mail_digest" id="mail_digest">
 			<input type="hidden" name="mail_content_length" value="$mail_content_length" id="mail_content_length">
 			<button name="submit" type="submit" class="mailform__button" value="submit">Send Message</button>	
 		</form>
@@ -246,10 +251,10 @@ EndOfHTML;
 			$mail_email = $_POST['mail_email'];
 			$mail_subject = $_POST['mail_subject'];
 			$mail_message = $_POST['mail_message'];
-			$mail_checksum = $_POST['mail_digest'];
+			$mail_digest = $_POST['mail_digest'];
 			$mail_content_length = $_POST['mail_content_length'];
 			
-			if (!$this->verify_checksum($mail_checksum, $mail_content_length, $mail_from, 
+			if (!$this->verify_digest($mail_digest, $mail_content_length, $mail_from, 
 									    $mail_email, $mail_subject, $mail_message)) 
 			{
 				return $this->render_notification(
@@ -270,14 +275,14 @@ EndOfHTML;
     		}
     	}
     	
-    	public function verify_checksum($mail_checksum, $mail_content_length, $mail_from,
+    	public function verify_digest($mail_digest, $mail_content_length, $mail_from,
     									$mail_email, $mail_subject, $mail_message)
     	{
-    		$computed_checksum = $this->generate_mail_checksum($mail_from, 
+    		$computed_checksum = $this->generate_mail_hash($mail_from, 
     														   $mail_email,
     														   $mail_subject, 
     														   $mail_message);
-    		if ($computed_checksum == $mail_checksum)
+    		if ($computed_checksum == $mail_digest)
     		{
     			return TRUE;
     		}
@@ -292,7 +297,7 @@ EndOfHTML;
 											   'size' => strlen($mail_message),
 											   'expected_size' => $mail_content_length,
 											   'checksum' => $computed_checksum,
-											   'expected_checksum' => $mail_checksum,
+											   'expected_checksum' => $mail_digest,
 											   'ip' => $_SERVER['REMOTE_ADDR'],
 											   'script' => $_SERVER['SCRIPT_FILENAME']));
 			}
@@ -352,9 +357,9 @@ EndOfHTML;
     	}
     	
     	/**
-    	 * Generate a checksum for a message.
+    	 * Generate a hash for a message.
     	 *
-    	 * Generate an MD5 checksum for a message, based on the contents of the
+    	 * Generate a hash for a message, based on the contents of the
     	 * message and a salt supplied as part of the Mailform object's settings.
     	 *
     	 * @param string $from Name of the user
@@ -364,9 +369,10 @@ EndOfHTML;
     	 * @return string A hex string
     	 */
     	  
-    	public function generate_mail_checksum($from,$email,$subject,$message) 
+    	public function generate_mail_hash($from,$email,$subject,$message) 
     	{
-    		return md5($this->salt . $from . $email . $subject . $message);
+    		return hash($this->algorithm, 
+    				    $this->salt . $from . $email . $subject . $message);
     	}
     	
     	/**

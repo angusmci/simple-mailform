@@ -22,7 +22,8 @@ The settings object will contain the following entries:
 | recipient            | user@example.com  | Email address of the message recipient    |
 | prefix               | My Website        | Prefix added to Subject line of messages  |
 | log                  | logs/mailform.log | Path to logfile                           |
-| checksum_failure_log | logs/failure.log  | Path to file for logging failed attempts  |
+| check_failure_log    | logs/failure.log  | Path to file for logging failed attempts  |
+| hash_algorithm       | sha256            | Algorithm used to generate message digest |
 
 The `salt` setting should be a (very) complex string. If you're not sure what to put, you could use a value from WordPress's handy [salt generator](https://api.wordpress.org/secret-key/1.1/salt/). 
 
@@ -40,7 +41,8 @@ $settings = [
 		'recipient' => 'user@example.com',
 		'prefix' => 'My Website',
 		'log' => $_SERVER['DOCUMENT_ROOT'] . "/../logs/mailform.log",
-		'checksum_failure_log' => $_SERVER['DOCUMENT_ROOT'] . '/../logs/rejection.log'
+		'checksum_failure_log' => $_SERVER['DOCUMENT_ROOT'] . '/../logs/rejection.log',
+		'hash_algorithm' => 'sha256'
 	]
 ];
 ```

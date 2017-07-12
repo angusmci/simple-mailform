@@ -22,11 +22,11 @@
 			$mailform = new Mailform();
 			$this->assertEquals("web form: a subject",
 								$mailform->get_prefixed_subject('a subject'));
-			$this->assertEquals('82974363c4d607ffebb49da78ab1c56d',
-								$mailform->generate_mail_checksum("Joe Bob",
-																  "user@example.com",
-																  "some subject",
-																  "some message"));
+			$this->assertEquals('a73c72da0bbb7919e8041bbf68bcadbbabe491909497b796ecc83604cf7eee59',
+								$mailform->generate_mail_hash("Joe Bob",
+															  "user@example.com",
+															  "some subject",
+															  "some message"));
 			$this->assertEquals("webmaster",
 								$mailform->get_message_destination());
 			$_SERVER['SERVER_NAME'] = 'example.com';
@@ -39,22 +39,22 @@
 			$mailform = new Mailform($settings);
 			$this->assertEquals("prefix 1: a subject",
 								$mailform->get_prefixed_subject('a subject'));
-			$this->assertEquals('4df97c46b256ac4bb74a5699f89919d5',
-								$mailform->generate_mail_checksum("Joe Bob",
-																  "user@example.com",
-																  "some subject",
-																  "some message"));
+			$this->assertEquals('af3ff210e0af49e1b623ea6acd4fd4bc8bc153a638eaba0c50706cf7ca715c1e',
+								$mailform->generate_mail_hash("Joe Bob",
+															  "user@example.com",
+															  "some subject",
+															  "some message"));
 			$this->assertEquals("bob@example.com",
 								$mailform->get_message_destination());
 
 		}
 		
-		public function test_has_checksum()
+		public function test_has_digest()
 		{
 			$fixture = new Mailform();
-			$this->assertFalse($fixture->has_checksum());
-			$_POST['mail_digest'] = 1234;
-			$this->assertTrue($fixture->has_checksum());
+			$this->assertFalse($fixture->has_digest());
+			$_POST['mail_digest'] = 1299;
+			$this->assertTrue($fixture->has_digest());
 		}
 		
 		public function test_has_data()
@@ -86,12 +86,28 @@
 				$fixture->render_notification('failure',MailformStrings::MESSAGE_EMPTY_MESSAGE),
 				$fixture->render_step2());
 			$_POST['mail_message'] = "A token message";
-			$this->assertEquals(1267,strlen($fixture->render_step2()));
+			$this->assertEquals(1299,strlen($fixture->render_step2()));
 		}
 		
-		public function test_generate_mail_checksum()
+		public function test_generate_mail_hash()
 		{
 			$fixture = new Mailform();
+			$this->assertEquals('fc1f1ad3e8a523e987b1270b3cdf747a7137a287304bd6ce0dce207554970b1b',
+								$fixture->generate_mail_hash("Joe Bob",
+												  			 "user@example.com",
+												  			 "Hello world",
+												  			 "This is a message."));
+			$fixture = new Mailform(['hash_algorithm' => 'md5',
+									 'salt' => 'sample salt',
+									 'recipient' => 'user@example.com',
+									 'prefix' => 'some prefix' ]);
+			$this->assertEquals('f3f15ffd0c0eb266eda6076d9e7b3d1f',
+								$fixture->generate_mail_hash("Joe Bob",
+												  			 "user@example.com",
+												  			 "Hello world",
+												  			 "This is a message."));
+
+			
 		}
 		
 	}
