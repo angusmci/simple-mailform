@@ -1,3 +1,13 @@
 composer.lock
 /docs
 /vendor
+
+# IDEA
+
+.idea/
+*.iml
+*.iws
+
+# Mac
+
+.DS_Store
