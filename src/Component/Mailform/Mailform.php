@@ -48,14 +48,13 @@
 									$message = MailformStrings::DEFAULT_GREETING, 
 									$textlines = DEFAULT_TEXTLINES)
 		{
+			$settings = array_merge(DEFAULT_MAILFORM_SETTINGS,$settings);
 			$this->greeting = $message;
 			$this->textlines = $textlines;
 			$this->salt = $settings['salt'];
 			$this->recipient = $settings['recipient'];
 			$this->prefix = $settings['prefix'];
-			$this->algorithm = (isset($settings['hash_algorithm']) ? 
-								$settings['hash_algorithm'] :
-								'sha256');
+			$this->algorithm = $settings['hash_algorithm'];
 			if (isset($settings['log']) and $settings['log'])
 			{
 				$this->logfile = $settings['log'];

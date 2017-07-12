@@ -106,8 +106,36 @@
 												  			 "user@example.com",
 												  			 "Hello world",
 												  			 "This is a message."));
-
-			
+		}
+		
+		public function test_defaults()
+		{
+			$fixture = new Mailform([]);
+			$this->assertEquals('6be832f95a8364b9780df015100556de73f663338d96f82a704877d99f1851e9',
+								$fixture->generate_mail_hash("a","b","c","d"));
+			$fixture = new Mailform(['hash_algorithm' => 'md5']);
+			$this->assertEquals('9a297fd16e744e512b02e490fd9cca86',
+								$fixture->generate_mail_hash("a","b","c","d"));
+			$fixture = new Mailform(['salt' => 'different salt now']);
+			$this->assertEquals('f2ce19fc931fbad618d81139534b4043a7c6991204d1c5a3806b16758044b3c1',
+								$fixture->generate_mail_hash("a","b","c","d"));
+			$fixture = new Mailform(['prefix' => 'my cool prefix']);
+			$this->assertEquals('6be832f95a8364b9780df015100556de73f663338d96f82a704877d99f1851e9',
+								$fixture->generate_mail_hash("a","b","c","d"));
+			$this->assertEquals('my cool prefix: some subj',
+								$fixture->get_prefixed_subject('some subj'));
+			$fixture = new Mailform(['recipient' => 'user@example.com']);
+			$this->assertEquals('user@example.com',
+								$fixture->get_message_destination());
+			$fixture = new Mailform();
+			$this->assertEquals('webmaster',
+								$fixture->get_message_destination());
+			$_SERVER['SERVER_NAME'] = 'example.net';
+			$this->assertEquals('webmaster@example.net',
+								$fixture->get_message_destination());
+			$fixture = new Mailform(['recipient' => 'webhamster']);
+			$this->assertEquals('webhamster@example.net',
+								$fixture->get_message_destination());
 		}
 		
 	}
