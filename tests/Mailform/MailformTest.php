@@ -15,6 +15,7 @@
 		public function test_constructor()
 		{
 			$mailform = new Mailform();
+			$this->assertNotNull($mailform);
 		}
 		
 		public function test_initialization()
