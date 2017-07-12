@@ -89,3 +89,5 @@ Changelog
 ---------
 
 0.2.0   First public release
+
+0.2.1   Minor bugfix for 'From' line
