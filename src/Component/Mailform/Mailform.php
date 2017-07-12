@@ -340,7 +340,7 @@ EndOfHTML;
             $mail_subject = $this->filter_other($mail_subject);
             $remote_addr = $this->filter_other($_SERVER['REMOTE_ADDR']);
             $http_user_agent = $this->filter_other($_SERVER['HTTP_USER_AGENT']);
-            $headers = "From: $mail_from ($mail_email)" . "\r\n" .
+            $headers = "From: $mail_email ($mail_from)" . "\r\n" .
                        "X-Mailer: PHP/" . phpversion() . "\r\n" .
                        "X-Server: " . $_SERVER['SERVER_NAME'] . "\r\n" .
                        "X-Submitter-IP: " . $remote_addr . "\r\n" .
