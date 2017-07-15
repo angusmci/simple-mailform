@@ -54,7 +54,7 @@ class Mailform
                                 $message = MailformStrings::DEFAULT_GREETING,
                                 $textlines = DEFAULT_TEXTLINES)
     {
-        if ($settings) {
+        if (isset($settings)) {
             $settings = array_merge(DEFAULT_MAILFORM_SETTINGS, $settings);
         }
         else {
