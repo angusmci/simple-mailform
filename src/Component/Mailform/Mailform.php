@@ -54,7 +54,12 @@ class Mailform
                                 $message = MailformStrings::DEFAULT_GREETING,
                                 $textlines = DEFAULT_TEXTLINES)
     {
-        $settings = array_merge(DEFAULT_MAILFORM_SETTINGS, $settings);
+        if ($settings) {
+            $settings = array_merge(DEFAULT_MAILFORM_SETTINGS, $settings);
+        }
+        else {
+            $settings = DEFAULT_MAILFORM_SETTINGS;
+        }
         $this->greeting = $message;
         $this->textlines = $textlines;
         $this->salt = $settings['salt'];
