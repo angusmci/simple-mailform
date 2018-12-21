@@ -262,6 +262,7 @@ EndOfHTML;
         $mail_email_encoded = htmlentities($mail_email, ENT_QUOTES, 'UTF-8');
         $mail_subject_encoded = htmlentities($mail_subject, ENT_QUOTES, 'UTF-8');
         $mail_message_encoded = htmlentities($mail_message, ENT_QUOTES, 'UTF-8');
+        $mail_message_formatted = str_replace("\n","<br />",$mail_message_encoded);
 
         $mail_digest = $this->generate_mail_hash($mail_from,
             $mail_email,
@@ -303,7 +304,7 @@ EndOfHTML;
     </div>
     <div>
         <div class="mailform__label">{$label_message}</div>
-        <div class="mailform__value">$mail_message_encoded</div>
+        <div class="mailform__value">$mail_message_formatted</div>
     </div>
     <div>
         <form action="#" method="POST">
