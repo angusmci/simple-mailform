@@ -24,10 +24,16 @@ The settings object will contain the following entries:
 | log                  | logs/mailform.log | Path to logfile                           |
 | check_failure_log    | logs/failure.log  | Path to file for logging failed attempts  |
 | hash_algorithm       | sha256            | Algorithm used to generate message digest |
+| placeholders         | true              | Show placeholders in message fields?      |
+| capture_dump_file    | logs/dumps.txt    | Path to file for dumping unsent messages  |
 
 The `salt` setting should be a (very) complex string. If you're not sure what to put, you could use a value from WordPress's handy [salt generator](https://api.wordpress.org/secret-key/1.1/salt/). 
 
 The message will be sent to `recipient`, and the Subject line of the message will be prefixed with `prefix`. Log activity will be written to the logfile at `log` (make sure that the log exists, and that it is writeable by your webserver). If you want to keep track of attempts to send spam through your mailform, you can also specify a path for `checksum_failure_log`.
+
+If `placeholders` is `true`, then the message fields on the form will use HTML5 placeholders. This option is off by default, as studies have shown that users may find placeholders confusing.
+
+The `capture_dump_file` setting is provided for debugging purposes. If this is set to a file path, then the contents of the message will be written out to a text file before the message is sent. This provides a record of the message even if it is never sent. By default, this setting is not enabled. 
 
 Example
 -------
@@ -42,7 +48,9 @@ $settings = [
 		'prefix' => 'My Website',
 		'log' => $_SERVER['DOCUMENT_ROOT'] . "/../logs/mailform.log",
 		'checksum_failure_log' => $_SERVER['DOCUMENT_ROOT'] . '/../logs/rejection.log',
-		'hash_algorithm' => 'sha256'
+		'hash_algorithm' => 'sha256',
+		'placeholders' => true,
+		'capture_dump_file' => $_SERVER['DOCUMENT_ROOT'] . "/../logs/mailform-dumps.txt"
 	]
 ];
 ```
@@ -93,3 +101,5 @@ Changelog
 0.2.1   Minor bugfix for 'From' line
 
 0.2.2   Support for debugging
+
+0.3.0	Additional features and improvements 
