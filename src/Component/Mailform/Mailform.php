@@ -137,6 +137,7 @@ Subject: {$mail_subject}
 Text:
 $mail_message
 --------------------------------------------------------------------------------
+
 EndOfText;
             try {
                 if (flock($fp, LOCK_EX)) {
