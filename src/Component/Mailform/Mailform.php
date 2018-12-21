@@ -5,6 +5,7 @@
 
 namespace Nomadcode\Component\Mailform;
 
+use Error;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
@@ -16,7 +17,7 @@ const DEFAULT_MAILFORM_SETTINGS = array('salt' => 'some salt',
     'hash_algorithm' => 'sha256',
     'debug' => false,
     'placeholders' => false,
-    'capture_unsent_messages' => false);
+    'capture_dump_file' => '');
 const DEFAULT_TEXTLINES = 8;
 
 const MAXIMUM_BODY_SIZE = 10 * 1024;
@@ -42,6 +43,7 @@ class Mailform
     protected $error;
     protected $debug;
     protected $placeholders;
+    protected $capture_dump_file;
 
     /**
      * Constructor
@@ -71,7 +73,7 @@ class Mailform
         $this->algorithm = $settings['hash_algorithm'];
         $this->debug = $settings['debug'];
         $this->placeholders = $settings['placeholders'];
-        $this->capture_unsent = $settings['capture_unsent_messages'];
+        $this->capture_dump_file = $settings['capture_dump_file'];
 
         if (isset($settings['log']) and $settings['log']) {
             $this->logfile = $settings['log'];
@@ -103,9 +105,49 @@ class Mailform
         if ($this->has_digest()) {
             print $this->render_step3();
         } else if ($this->has_data()) {
+            $this->dump_message();
             print $this->render_step2();
         } else {
             print $this->render_step1();
+        }
+    }
+
+    /**
+     * Dump the initial data entered by the user to a dump file.
+     *
+     * This is primarily a debugging function. Output will only be written
+     * if the configuration file includes a 'capture_dump_file' setting.
+     */
+
+    public function dump_message() {
+        if ($this->capture_dump_file != '') {
+            $fp = fopen($this->capture_dump_file, "w+");
+            $mail_from = $this->get_form_value($_POST, 'mail_from',
+                MailformStrings::DEFAULT_FROM);
+            $mail_email = $this->get_form_value($_POST, 'mail_email', "");
+            $mail_subject = $this->get_form_value($_POST, 'mail_subject',
+                MailformStrings::DEFAULT_SUBJECT);
+            $mail_message = $this->get_form_value($_POST, 'mail_message', "");
+            $record = <<<EndOfText
+Name: {$mail_from}
+Email: {$mail_email}
+Subject: {$mail_subject}
+Text:
+$mail_message
+--------------------------------------------------------------------------------
+EndOfText;
+            try {
+                if (flock($fp, LOCK_EX)) {
+                    fwrite($fp, $record);
+                    fflush($fp);
+                    flock($fp, LOCK_UN);
+                }
+                fclose($fp);
+            }
+            catch (Error $e) {
+                // Do nothing -- failure to write a dump is not a
+                // critical error, so we can ignore it.
+            }
         }
     }
 
