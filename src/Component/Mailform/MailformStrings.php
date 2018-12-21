@@ -8,7 +8,8 @@
 		const LABEL_EMAIL = "Email";
 		const LABEL_SUBJECT = "Subject";
 		const LABEL_MESSAGE = "Message";
-		const LABEL_SEND = "Send";
+		const LABEL_SEND = "Send Message";
+		const LABEL_PREVIEW = "Preview Message";
 		
 		const PLACEHOLDER_FROM = "Your Name";
 		const PLACEHOLDER_EMAIL = "you@yourdomain.com";
@@ -17,7 +18,7 @@
 		
 		const DEFAULT_FROM = "Anonymous";
 		const DEFAULT_SUBJECT = "Comment";
-		
+
 		const DEFAULT_GREETING = <<<EndOfText
 To send email to the owner of this website, please fill in the form below. Please 
 remember to include a valid email address so that we can reply to you.
@@ -46,7 +47,7 @@ EndOfText;
 You did not enter a message. Please use your browser's Back button to go back and try again.
 EndOfText;
 		const MESSAGE_NOTICE_INTERIM = <<<EndOfText
-This is the message that will be sent. If this looks OK, please click the Send button. 
+Your message has not been sent yet. This is the message that will be sent. If everything looks OK, please click the Send button. 
 Otherwise, use your browser's Back button to go back and edit your message.
 EndOfText;
 	}
