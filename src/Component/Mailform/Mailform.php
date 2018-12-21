@@ -121,7 +121,7 @@ class Mailform
 
     public function dump_message() {
         if ($this->capture_dump_file != '') {
-            $fp = fopen($this->capture_dump_file, "w+");
+            $fp = fopen($this->capture_dump_file, "a");
             $mail_from = $this->get_form_value($_POST, 'mail_from',
                 MailformStrings::DEFAULT_FROM);
             $mail_email = $this->get_form_value($_POST, 'mail_email', "");
