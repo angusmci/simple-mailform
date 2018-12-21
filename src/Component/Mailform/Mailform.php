@@ -14,7 +14,9 @@ const DEFAULT_MAILFORM_SETTINGS = array('salt' => 'some salt',
     'log' => '',
     'check_failure_log' => '',
     'hash_algorithm' => 'sha256',
-    'debug' => false);
+    'debug' => false,
+    'placeholders' => false,
+    'capture_unsent_messages' => false);
 const DEFAULT_TEXTLINES = 8;
 
 const MAXIMUM_BODY_SIZE = 10 * 1024;
@@ -39,6 +41,7 @@ class Mailform
     protected $algorithm;
     protected $error;
     protected $debug;
+    protected $placeholders;
 
     /**
      * Constructor
@@ -67,6 +70,8 @@ class Mailform
         $this->prefix = $settings['prefix'];
         $this->algorithm = $settings['hash_algorithm'];
         $this->debug = $settings['debug'];
+        $this->placeholders = $settings['placeholders'];
+        $this->capture_unsent = $settings['capture_unsent_messages'];
 
         if (isset($settings['log']) and $settings['log']) {
             $this->logfile = $settings['log'];
@@ -146,29 +151,45 @@ class Mailform
 
     public function render_step1()
     {
+        $from_placeholder = "";
+        $email_placeholder = "";
+        $subject_placeholder = "";
+        $message_placeholder = "";
+        if ($this->placeholders) {
+            $from_placeholder = MailformStrings::PLACEHOLDER_FROM;
+            $email_placeholder = MailformStrings::PLACEHOLDER_EMAIL;
+            $subject_placeholder = MailformStrings::PLACEHOLDER_SUBJECT;
+            $message_placeholder = MailformStrings::PLACEHOLDER_MESSAGE;
+        }
+        $label_from = MailformStrings::LABEL_FROM;
+        $label_email = MailformStrings::LABEL_EMAIL;
+        $label_subject = MailformStrings::LABEL_SUBJECT;
+        $label_message = MailformStrings::LABEL_MESSAGE;
+        $label_submit = MailformStrings::LABEL_PREVIEW;
+
         return <<<EndOfHTML
 <div class="mailform__greeting">
     <p>$this->greeting</p>
 </div>
 <form class="mailform__form" action="#" method="POST">
     <div>
-        <label for="mail_from" class="mailform__label">From</label>
-        <input type="text" name="mail_from" id="mail_from" class="mailform__value" placeholder="Your Name" />
+        <label for="mail_from" class="mailform__label">{$label_from}</label>
+        <input type="text" name="mail_from" id="mail_from" class="mailform__value" placeholder="{$from_placeholder}" />
     </div>
     <div>
-        <label for="mail_email" class="mailform__label">Email</label>
-        <input type="email" name="mail_email" id="mail_email" class="mailform__value"  placeholder="you@yourdomain.com" required="required"/>
+        <label for="mail_email" class="mailform__label">{$label_email}</label>
+        <input type="email" name="mail_email" id="mail_email" class="mailform__value" placeholder="{$email_placeholder}" required="required"/>
     </div>
     <div>
-        <label for="mail_subject" class="mailform__label">Subject</label>
-        <input type="text" name="mail_subject" id="mail_subject" class="mailform__value"  placeholder="Comment" />
+        <label for="mail_subject" class="mailform__label">{$label_subject}</label>
+        <input type="text" name="mail_subject" id="mail_subject" class="mailform__value" placeholder="{$subject_placeholder}" />
     </div>
     <div>
-        <label for="mail_message" class="mailform__label">Message</label>
-        <textarea id="mail_message" name="mail_message" class="mailform__value" placeholder="Enter your message here" required="required" rows="$this->textlines"></textarea>
+        <label for="mail_message" class="mailform__label">{$label_message}</label>
+        <textarea id="mail_message" name="mail_message" class="mailform__value" placeholder="{$message_placeholder}" required="required" rows="$this->textlines"></textarea>
     </div>
     <div>
-        <button name="submit" type="submit" value="submit" class="mailform__button">Send Message</button>
+        <button name="submit" type="submit" value="submit" class="mailform__button">{$label_submit}</button>
     </div>
 </form>
 EndOfHTML;
@@ -218,21 +239,25 @@ EndOfHTML;
 
         $mail_content_length = strlen($mail_message);
         $interim_message = MailformStrings::MESSAGE_NOTICE_INTERIM;
+        $label_from = MailformStrings::LABEL_FROM;
+        $label_subject = MailformStrings::LABEL_SUBJECT;
+        $label_message = MailformStrings::LABEL_MESSAGE;
+        $label_submit = MailformStrings::LABEL_SEND;
         return <<<EndOfHTML
 <div class="mailform__interim">
     <p>$interim_message</p>
 </div>
 <div class="mailform__summary">
     <div>
-        <div class="mailform__label">From</div>
+        <div class="mailform__label">{$label_from}</div>
         <div class="mailform__value">$mail_from_encoded ($mail_email_encoded)</div>
     </div>
     <div>   
-        <div class="mailform__label">Subject</div>
+        <div class="mailform__label">{$label_subject}</div>
         <div class="mailform__value">$mail_subject_encoded</div>
     </div>
     <div>
-        <div class="mailform__label">Message</div>
+        <div class="mailform__label">{$label_message}</div>
         <div class="mailform__value">$mail_message_encoded</div>
     </div>
     <div>
@@ -243,7 +268,7 @@ EndOfHTML;
             <input type="hidden" name="mail_message" value="$mail_message_encoded" id="mail_message">
             <input type="hidden" name="mail_digest" value="$mail_digest" id="mail_digest">
             <input type="hidden" name="mail_content_length" value="$mail_content_length" id="mail_content_length">
-            <button name="submit" type="submit" class="mailform__button" value="submit">Send Message</button>   
+            <button name="submit" type="submit" class="mailform__button" value="submit">{$label_submit}</button>   
         </form>
     </div>
 </div>

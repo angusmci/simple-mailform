@@ -2,7 +2,7 @@
 	use Nomadcode\Component\Mailform\Mailform as Mailform;
 	use Nomadcode\Component\Mailform\MailformStrings as MailformStrings;
 
-	class MailformTest extends PHPUnit_Framework_TestCase
+	class MailformTest extends PHPUnit\Framework\TestCase
 	{
 		protected function setUp()
 		{
@@ -74,8 +74,16 @@
 			$_POST['mail_message'] = "A message to you, Rudi.";
 			$this->assertTrue($fixture->has_data());
 		}
-		
-		public function test_render_step2()
+
+        public function test_render_step1()
+        {
+            $fixture = new Mailform();
+            $this->assertEquals(1234,strlen($fixture->render_step1()));
+            $fixture = new Mailform(array('placeholders' => true));
+            $this->assertEquals(1291,strlen($fixture->render_step1()));
+        }
+
+        public function test_render_step2()
 		{
 			$fixture = new Mailform();
 			$_POST['mail_email'] = "This is not a valid email";
@@ -87,7 +95,7 @@
 				$fixture->render_notification('failure',MailformStrings::MESSAGE_EMPTY_MESSAGE),
 				$fixture->render_step2());
 			$_POST['mail_message'] = "A token message";
-			$this->assertEquals(1441,strlen($fixture->render_step2()));
+			$this->assertEquals(1483,strlen($fixture->render_step2()));
 		}
 		
 		public function test_generate_mail_hash()
