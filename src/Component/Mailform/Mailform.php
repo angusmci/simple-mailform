@@ -128,7 +128,9 @@ class Mailform
             $mail_subject = $this->get_form_value($_POST, 'mail_subject',
                 MailformStrings::DEFAULT_SUBJECT);
             $mail_message = $this->get_form_value($_POST, 'mail_message', "");
+            $date = date("c");
             $record = <<<EndOfText
+Date: {$date}
 Name: {$mail_from}
 Email: {$mail_email}
 Subject: {$mail_subject}
