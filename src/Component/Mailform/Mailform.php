@@ -222,7 +222,7 @@ EndOfText;
         <input type="text" name="mail_from" id="mail_from" class="mailform__value" placeholder="{$from_placeholder}" />
     </div>
     <div>
-        <label for="mail_email" class="mailform__label">{$label_email}</label>
+        <label for="mail_email" class="mailform__label mailform__label--required">{$label_email}</label>
         <input type="email" name="mail_email" id="mail_email" class="mailform__value" placeholder="{$email_placeholder}" required="required"/>
     </div>
     <div>
@@ -230,7 +230,7 @@ EndOfText;
         <input type="text" name="mail_subject" id="mail_subject" class="mailform__value" placeholder="{$subject_placeholder}" />
     </div>
     <div>
-        <label for="mail_message" class="mailform__label">{$label_message}</label>
+        <label for="mail_message" class="mailform__label mailform__label--required">{$label_message}</label>
         <textarea id="mail_message" name="mail_message" class="mailform__value" placeholder="{$message_placeholder}" required="required" rows="$this->textlines"></textarea>
     </div>
     <div>
