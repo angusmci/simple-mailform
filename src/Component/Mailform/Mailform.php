@@ -61,8 +61,7 @@ class Mailform
     {
         if (isset($settings)) {
             $settings = array_merge(DEFAULT_MAILFORM_SETTINGS, $settings);
-        }
-        else {
+        } else {
             $settings = DEFAULT_MAILFORM_SETTINGS;
         }
         $this->greeting = $message;
@@ -119,7 +118,8 @@ class Mailform
      * if the configuration file includes a 'capture_dump_file' setting.
      */
 
-    public function dump_message() {
+    public function dump_message()
+    {
         if ($this->capture_dump_file != '') {
             $fp = fopen($this->capture_dump_file, "a");
             $mail_from = $this->get_form_value($_POST, 'mail_from',
@@ -128,12 +128,16 @@ class Mailform
             $mail_subject = $this->get_form_value($_POST, 'mail_subject',
                 MailformStrings::DEFAULT_SUBJECT);
             $mail_message = $this->get_form_value($_POST, 'mail_message', "");
+            $ip = $this->get_form_value($_SERVER, 'REMOTE_ADDR', '');
+            $script = $this->get_form_value($_SERVER, 'SCRIPT_FILENAME', '');
             $date = date("c");
             $record = <<<EndOfText
 Date: {$date}
 Name: {$mail_from}
 Email: {$mail_email}
 Subject: {$mail_subject}
+Source-IP: {$ip}
+Source-Script: {$script}
 Text:
 $mail_message
 --------------------------------------------------------------------------------
@@ -146,8 +150,7 @@ EndOfText;
                     flock($fp, LOCK_UN);
                 }
                 fclose($fp);
-            }
-            catch (Error $e) {
+            } catch (Error $e) {
                 // Do nothing -- failure to write a dump is not a
                 // critical error, so we can ignore it.
             }
@@ -262,7 +265,7 @@ EndOfHTML;
         $mail_email_encoded = htmlentities($mail_email, ENT_QUOTES, 'UTF-8');
         $mail_subject_encoded = htmlentities($mail_subject, ENT_QUOTES, 'UTF-8');
         $mail_message_encoded = htmlentities($mail_message, ENT_QUOTES, 'UTF-8');
-        $mail_message_formatted = str_replace("\n","<br />",$mail_message_encoded);
+        $mail_message_formatted = str_replace("\n", "<br />", $mail_message_encoded);
 
         $mail_digest = $this->generate_mail_hash($mail_from,
             $mail_email,
@@ -519,8 +522,7 @@ EndOfHTML;
     <p>$this->error</p>
 </div>
 EndOfHTML;
-        }
-         else {
+        } else {
             return <<<EndOfHTML
 <div class="mailform__notification mailform__notification--$status"><p>$message</p></div>
 EndOfHTML;
