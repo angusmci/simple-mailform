@@ -317,7 +317,9 @@ EndOfHTML;
             <input type="hidden" name="mail_message" value="$mail_message_encoded" id="mail_message">
             <input type="hidden" name="mail_digest" value="$mail_digest" id="mail_digest">
             <input type="hidden" name="mail_content_length" value="$mail_content_length" id="mail_content_length">
-            <button name="submit" type="submit" class="mailform__button" value="submit">{$label_submit}</button>   
+            <div>
+                <button name="submit" type="submit" class="mailform__button" value="submit">{$label_submit}</button>
+            </div>   
         </form>
     </div>
 </div>
